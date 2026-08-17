@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Método das 4 Cores — Dominar Tratamento de Feridas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #070d14;
+      --white: #f4f7f9;
+      --cream: #e9eff4;
+      --blue: #0f4c81;
+      --blue-light: #1b73b9;
+      --blue-pale: #dbe8f5;
+      --accent: #d4a339;
+      --red: #c0392b;
+      --green: #10b981;
+      --gray: #52606d;
+      --border: rgba(0,0,0,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 17px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .hero-left {
+      padding: 80px 64px 80px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue-pale);
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 100px;
+      width: fit-content;
+      letter-spacing: 0.3px;
+    }
+    .badge::before {
+      content: '';
+      display: block;
+      width: 8px; height: 8px;
+      background: var(--blue-light);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 3.8vw, 48px);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1.5px;
+      color: var(--black);
+    }
+    h1 em {
+      font-style: italic;
+      color: var(--blue-light);
+    }
+
+    .subheadline {
+      font-size: 18px;
+      font-weight: 300;
+      color: #333;
+      line-height: 1.65;
+      max-width: 540px;
+    }
+    .subheadline strong {
+      font-weight: 600;
+      color: var(--black);
+    }
+
+    .hero-cta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      text-decoration: none;
+      padding: 18px 32px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      transition: background 0.2s, transform 0.15s;
+      text-align: center;
+    }
+    .btn-primary:hover { background: var(--blue-light); transform: translateY(-1px); }
+
+    .trust-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 13px;
+      color: var(--gray);
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ── HERO RIGHT ── */
+    .hero-right {
+      background: var(--black);
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-right::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 60% 30%, rgba(27,115,185,0.3) 0%, transparent 60%);
+    }
+
+    .phone-mockup {
+      width: 100%;
+      max-width: 340px;
+      background: #0d1520;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 28px 24px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    }
+
+    .mockup-label {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .mockup-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .bar-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+    .bar-track {
+      height: 6px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .bar-fill { height: 100%; border-radius: 100px; }
+    .bar-fill.red { background: #ef4444; }
+    .bar-fill.yellow { background: #f59e0b; }
+    .bar-fill.blue { background: #3b82f6; }
+    .bar-fill.green { background: #10b981; }
+
+    .mockup-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(27,115,185,0.15);
+      border: 1px solid rgba(27,115,185,0.3);
+      color: #64b5f6;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+    .mockup-chip::before { content: '✓'; font-weight: 700; }
+
+    /* ── MODULES / AULAS ── */
+    .section {
+      padding: 100px 80px;
+    }
+
+    .section-tag {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--blue-light);
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 60px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .step {
+      background: var(--cream);
+      padding: 36px 30px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border: 1px solid var(--border);
+    }
+    .step-time {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      background: var(--blue-pale);
+      padding: 4px 10px;
+      border-radius: 4px;
+      width: fit-content;
+    }
+    .step-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--black);
+    }
+    .step-desc {
+      font-size: 15px;
+      color: var(--gray);
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    /* ── PROOF SECTION ── */
+    .proof-section {
+      background: var(--black);
+      color: var(--white);
+      padding: 80px;
+    }
+    .proof-section .section-tag { color: var(--blue-light); }
+    .proof-section h2 { color: var(--white); }
+
+    .testimonials {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .testimonial {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .stars { color: var(--accent); font-size: 14px; }
+    .testimonial-text {
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.6;
+      font-style: italic;
+    }
+    .testimonial-author {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ── PRICING ── */
+    .pricing-section {
+      padding: 100px 40px;
+      background: var(--black);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .pricing-section .section-tag { color: var(--blue-light); }
+    .pricing-section h2 { color: var(--white); margin-bottom: 48px; }
+
+    .pricing-card {
+      background: #0f1722;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 56px 64px;
+      max-width: 640px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 80px rgba(27,115,185,0.15), 0 40px 80px rgba(0,0,0,0.6);
+    }
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue), var(--blue-light), var(--accent));
+    }
+
+    .price-tag {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .price-from {
+      font-size: 15px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: line-through;
+    }
+    .price-main {
+      font-family: 'Playfair Display', serif;
+      font-size: 80px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -3px;
+      color: var(--white);
+    }
+    .price-main sup { font-size: 32px; vertical-align: super; letter-spacing: 0; }
+    .price-note { font-size: 14px; color: rgba(255,255,255,0.4); font-weight: 300; margin-top: 4px; }
+
+    .features-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      text-align: left;
+    }
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 15px;
+      color: rgba(255,255,255,0.85);
+      font-weight: 300;
+    }
+    .feature-check {
+      width: 22px; height: 22px;
+      background: rgba(27,115,185,0.2);
+      border: 1px solid rgba(27,115,185,0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #64b5f6;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .reforce-text {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 300;
+      line-height: 1.65;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 24px;
+      width: 100%;
+    }
+    .reforce-text strong {
+      color: rgba(255,255,255,0.95);
+      font-weight: 600;
+    }
+
+    .pricing-card .btn-primary {
+      width: 100%;
+      font-size: 17px;
+      padding: 20px 32px;
+      border-radius: 8px;
+    }
+
+    /* ── ORDER BUMP PREVIEW CARD ── */
+    .bump-card {
+      background: rgba(212,163,57,0.05);
+      border: 1px dashed rgba(212,163,57,0.4);
+      border-radius: 12px;
+      padding: 20px 24px;
+      width: 100%;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .bump-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .bump-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(212,163,57,0.15);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .bump-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .bump-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 300;
+      line-height: 1.5;
+    }
+
+    .pricing-divider {
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    .guarantee-inline {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-align: left;
+      width: 100%;
+    }
+    .guarantee-days {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      font-weight: 900;
+      color: #64b5f6;
+      letter-spacing: -2px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .guarantee-text-block { display: flex; flex-direction: column; gap: 4px; }
+    .guarantee-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+    }
+    .guarantee-text {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.5;
+    }
+
+    /* ── FAQ ── */
+    .faq-section {
+      background: var(--cream);
+      padding: 80px;
+    }
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: rgba(0,0,0,0.07);
+      margin-top: 40px;
+    }
+    .faq-item {
+      background: var(--cream);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .faq-q {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -0.3px;
+    }
+    .faq-a {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+      background: var(--blue);
+      color: #fff;
+      padding: 100px 80px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+    .final-cta h2 {
+      color: #fff;
+      font-size: clamp(32px, 4vw, 52px);
+      margin-bottom: 0;
+      max-width: 700px;
+    }
+    .final-cta p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.85);
+      font-weight: 300;
+      max-width: 500px;
+    }
+    .btn-white {
+      display: inline-block;
+      background: #fff;
+      color: var(--blue);
+      text-decoration: none;
+      padding: 18px 40px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      transition: transform 0.15s, box-shadow 0.15s;
+      margin-top: 8px;
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black);
+      color: rgba(255,255,255,0.4);
+      padding: 32px 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 300;
+    }
+    footer .logo { color: rgba(255,255,255,0.3); font-size: 16px; font-family: 'Playfair Display', serif; font-weight: 700; }
+    footer a { color: rgba(255,255,255,0.4); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-left { padding: 60px 24px; }
+      .hero-right { min-height: 420px; }
+      .section, .pricing-section, .proof-section, .faq-section, .final-cta { padding: 60px 24px; }
+      .steps, .testimonials { grid-template-columns: 1fr; }
+      .pricing-card { padding: 36px 24px; }
+      .faq-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 16px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="badge">MANUAIS DA SOBEST & MINISTÉRIO DA SAÚDE</div>
+
+    <h1>Saiba exatamente <em>qual cobertura usar</em> para cada tipo de ferida - em menos de 5 minutos</h1>
+
+    <p class="subheadline">
+      Transforme o conhecimento sobre feridas em uma decisão prática durante o plantão. Aprenda a <strong>avaliar o leito da lesão, identificar o tecido predominante e direcionar a escolha da cobertura adequada.</strong> Descubra o Método das 4 Cores: um método visual, prático e fácil de memorizar - pensado para a rotina corrida do enfermeiro. 
+    <div class="hero-cta-group">
+      <a href="#investimento" class="btn-primary">
+        QUERO DOMINAR O TRATAMENTO DE FERIDAS
+      </a>
+      <div class="trust-row">
+        <span class="trust-item">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Aulas Objetivas (15 a 20min) de Aplicação Rápida
+        </span>
+        <span class="trust-item">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Guia Digital para consultar no Celular
+        </span>
+        <span class="trust-item">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Garantia de 7 dias
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="phone-mockup">
+      <div class="mockup-label">O QUE VOCÊ RECEBE NO CELULAR</div>
+
+      <div class="mockup-bars">
+        <div class="bar-row">
+          <div class="bar-meta">
+            <span>1. Diagnóstico Visual em Segundos</span>
+            <span style="color:#ef4444;font-size:11px;font-weight:600;">Direto</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill red" style="width:100%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-meta">
+            <span>2. Tabela de Coberturas & Indicações</span>
+            <span style="color:#f59e0b;font-size:11px;font-weight:600;">Prático</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill yellow" style="width:100%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-meta">
+            <span>3. Conduta para LPP, Pé Diabético e Úlceras</span>
+            <span style="color:#3b82f6;font-size:11px;font-weight:600;">Clínico</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill blue" style="width:100%"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-meta">
+            <span>4. Modelos de Evolução de Enfermagem</span>
+            <span style="color:#10b981;font-size:11px;font-weight:600;">Rápido</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div>
+        </div>
+      </div>
+
+      <div class="mockup-chip">
+        Acesso Imediato pelo aplicativo
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;background:rgba(212,163,57,0.08);border:1px solid rgba(212,163,57,0.2);color:var(--accent);padding:10px 14px;border-radius:8px;font-size:13px;font-weight:500;">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Prontidão no Plantão & Atendimento Particular
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MÓDULOS / MINI-AULAS -->
+<section class="section">
+  <div class="section-tag">CONTEÚDO COMPACTO E APLICÁVEL</div>
+  <h2>Tudo o que você vai receber para aplicar hoje mesmo</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-time">PASSO 1 · DIAGNÓSTICO & COBERTURAS</div>
+      <div class="step-title">A Rota Prática das 4 Cores</div>
+      <div class="step-desc">
+        Aulas objetivas (15 a 20 min) ensinando a diferenciar Necrose, Esfacelo, Granulação e Epitelização. Você saberá exatamente quando usar Papaina, Hidrogel, Alginato, Carvão Ativado, Prata e Filmes Transparentes sem hesitação.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-time">PASSO 2 · CASOS PRÁTICOS DE PLANTÃO</div>
+      <div class="step-title">Condutas Clínicas Diretas</div>
+      <div class="step-desc">
+        Como agir diante de Lesões por Pressão (Estágios 1 a 4), Pé Diabético e Úlceras Vasculogênicas. Aprenda o que aplicamos no dia a dia e os erros graves que você nunca deve cometer na ferida.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-time">FERRAMENTA 1 · GUIA DIGITAL DE BOLSO</div>
+      <div class="step-title">Manual de Consulta Rápida (PDF)</div>
+      <div class="step-desc">
+        Um guia visual pensado para salvar no celular e consultar em segundos durante o plantão. Mostra a cor do tecido, a cobertura indicada e a frequência de troca ideal.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-time">FERRAMENTA 2 · PROTOCOLO DE ANOTAÇÃO</div>
+      <div class="step-title">Modelos de Evolução de Feridas</div>
+      <div class="step-desc">
+        Estrutura pronta para você descrever a lesão, o tecido e a conduta no prontuário de forma técnica, protegendo seu exercício profissional e garantindo respaldo legal.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROVA SOCIAL -->
+<section class="proof-section">
+  <div class="section-tag">Resultados Reais</div>
+  <h2>Profissionais que transformaram sua conduta técnica</h2>
+
+  <div class="testimonials">
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"Sempre tive medo de assumir feridas graves no Home Care. Depois que baixei o guia e vi as aulas curtas, bastam 5 segundos para eu saber exatamente o que prescrever. O investimento se pagou no primeiro curativo."</div>
+      <div class="testimonial-author">Juliana M. · Enfermeira</div>
+    </div>
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"Sem enrolação! Odiava cursos cheios de teorias que não ajudavam no meio do plantão. As aulas curtas e o PDF no meu celular resolveram minha vida."</div>
+      <div class="testimonial-author">Lucas T. · Técnico de Enfermagem</div>
+    </div>
+    <div class="testimonial">
+      <div class="stars">★★★★★</div>
+      <div class="testimonial-text">"Consegui fechar uma lesão por pressão estágio 3 que já durava meses. A família do paciente ficou impressionada e hoje sou chamada para vários atendimentos particulares."</div>
+      <div class="testimonial-author">Carla R. · Enfermeira Estomaterapeuta</div>
+    </div>
+  </div>
+</section>
+
+<!-- PREÇO -->
+<section class="pricing-section" id="investimento">
+  <div class="section-tag">Oferta Especial</div>
+  <h2>Saiba exatamente qual cobertura usar para cada tipo de ferida - em menos de 5 minutos</h2>
+
+  <div class="pricing-card">
+    <div class="price-tag">
+      <div class="price-from">De R$&nbsp;197,00</div>
+      <div class="price-main"><sup>R$</sup>47<span style="font-size:40px;letter-spacing:-1px">,00</span></div>
+      <div class="price-note">no PIX ou Cartão · acesso imediato e vitalício</div>
+    </div>
+
+    <div class="pricing-divider"></div>
+
+    <div class="features-list">
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        <strong>Aulas Práticas e Diretas ao Ponto (15 a 20min):</strong> focadas em conduta e coberturas
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        <strong>PDF Guia Digital de Bolso:</strong> Para salvar no celular e consultar no plantão
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        <strong>Modelos de Evolução de Enfermagem:</strong> Respaldo técnico no prontuário
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        Fundamentado na <strong>SOBEST & Ministério da Saúde</strong>
+      </div>
+      <div class="feature-item">
+        <div class="feature-check">✓</div>
+        Certificado de Conclusão Incluso
+      </div>
+    </div>
+
+    <div class="reforce-text">
+      Com apenas <strong>um único atendimento particular em Home Care</strong> (R$ 150 a R$ 300) você recupera mais de 3x o valor do seu investimento.
+    </div>
+
+    <a href="https://pay.hotmart.com/F105350313X?off=g31fa9qo&checkoutMode=10" class="btn-primary">
+      QUERO DOMINAR FERIDAS AGORA
+    </a>
+
+      <div class="pricing-divider"></div>
+
+    <div class="guarantee-inline">
+      <div class="guarantee-days">7</div>
+      <div class="guarantee-text-block">
+        <div class="guarantee-title">7 Dias de Garantia Incondicional</div>
+        <div class="guarantee-text">Domine o tratamento de feridas com o Método das 4 Cores ou receba 100% do seu investimento de volta. Sem perguntas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="section-tag">Dúvidas Frequentes</div>
+  <h2>Respostas diretas.</h2>
+
+  <div class="faq-grid">
+    <div class="faq-item">
+      <div class="faq-q">O acesso é vitalício?</div>
+      <div class="faq-a">Sim! Você assiste às aulas e baixa o Guia Digital de Bolso quantas vezes quiser para consultar no celular sempre que surgir uma dúvida no plantão.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Serve para Técnicos de Enfermagem e Estudantes?</div>
+      <div class="faq-a">Com certeza. O método é extremamente prático e visual, ideal para quem precisa tomar decisões rápidas no dia a dia da assistência.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Quanto tempo leva para concluir?</div>
+      <div class="faq-a">São 8 aulas objetivas de 15 a 20 minutos. Em cerca de 2 horas você assiste a todo o conteúdo e já fica pronto para aplicar os conhecimentos.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Como recebo o acesso?</div>
+      <div class="faq-a">O acesso é imediato. Assim que o pagamento de R$ 47,00 for confirmado, você recebe um e-mail com as credenciais para acessar a área de alunos e baixar os materiais.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <h2>Seja o profissional de enfermagem que fecha feridas e gera resultados.</h2>
+  <p>Por apenas R$&nbsp;47,00 você domina o Método das 4 Cores e garante total segurança técnica no seu próximo plantão.</p>
+  <a href="https://pay.hotmart.com/F105350313X?off=g31fa9qo&checkoutMode=10" class="btn-white">
+    ACESSAR MÉTODO DAS 4 CORES
+  </a>
+  <div style="font-size:13px;color:rgba(255,255,255,0.6)">Pagamento 100% seguro · Acesso imediato · Garantia de 7 dias</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Método das 4 Cores</div>
+  <div style="display:flex;gap:24px;align-items:center">
+    <a href="#">Termos de Uso</a>
+    <a href="#">Política de Privacidade</a>
+  </div>
+</footer>
+
+</body>
+</html>
